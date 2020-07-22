@@ -101,7 +101,7 @@ router.post('/users/logout', auth, async (req, res) => {
     }
   })
  
- router.post('/users/me/avatar', auth, upload.single('avatar'), (req,res) => {
+ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req,res) => {
     const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
     req.user.avatar = buffer
 
@@ -111,7 +111,7 @@ router.post('/users/logout', auth, async (req, res) => {
      res.status(400).send({error: error.message})
  }) 
 
- routeur.delete('/users/me/avatar', auth, async (req,res) => {
+ router.delete('/users/me/avatar', auth, async (req,res) => {
     req.user.avatar = undefined
     await req.user.save()
     res.send()
