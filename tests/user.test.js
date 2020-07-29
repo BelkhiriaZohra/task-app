@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const app = require('../src/app')
 const User = require('../src/models/user')
-
+ //env-cmd config/test.env 
+//env-cmd config/dev.env 
 const userOneId = new mongoose.Types.ObjectId()
 const userOne = {
     _id: userOneId,
@@ -11,7 +12,7 @@ const userOne = {
     email: 'mariem@gmail.com',
     password: 'M_12833980',
     tokens: [{
-        token: jwt.sign({_id: userOneId}, process.env.JWT_SECRET)
+        token: jwt.sign({_id: userOneId}, process.env.JWT_SECRET)//process.env.JWT_SECRET
     }]
 }
 beforeEach(async () => {

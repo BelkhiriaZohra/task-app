@@ -1,5 +1,6 @@
 const express = require ('express')
 const multer = require('multer')
+const getStream = require('get-stream')
 const sharp = require('sharp')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
@@ -94,10 +95,7 @@ router.post('/users/logout', auth, async (req, res) => {
      }
  })
  
- var storage = multer.memoryStorage()
  const upload = multer({
-    storage: storage
-   },{
     dest: 'avatars',
     limits:{
         fileSize: 1000000
@@ -108,13 +106,18 @@ router.post('/users/logout', auth, async (req, res) => {
         }
         cb(undefined, true)
     }
-  } 
-  )
+  })
  
-
  router.post('/users/me/avatar', auth, upload.single('avatar'), async (req,res) => {
-    const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
-    req.user.avatar = buffer
+    
+    //const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+    //req.user.avatar = buffer
+    req.user.avatar = req.file
+    console.log(req.file)
+    const buffer = await getStream(req.file.stream)
+    console.log(buffer)
+    console.log(req.user.avatar)
+    //console.log(buffer)
     await req.user.save() 
     res.send()
  },(error, req, res, next) => {

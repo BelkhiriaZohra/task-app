@@ -71,7 +71,7 @@ userSchema.pre('remove', async function(next){
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({_id: user._id.toSring()}, process.env.JWT_SECRET)
+    const token = jwt.sign({_id: user._id.toString()},process.env.JWT_SECRET, {expiresIn: '60 minute'}) //
 
     user.tokens = user.tokens.concat({token})
     await user.save()
@@ -79,12 +79,14 @@ userSchema.methods.generateAuthToken = async function () {
 }
 
 userSchema.statics.findByCredentials = async (email, password) => {
+  
     const user = await User.findOne({email}) 
     if (!user){
         throw new Error('Unable to login')
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
+
     if (!isMatch){
         throw new Error('Password Incorrect')
     }

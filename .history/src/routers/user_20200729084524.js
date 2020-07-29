@@ -94,10 +94,7 @@ router.post('/users/logout', auth, async (req, res) => {
      }
  })
  
- var storage = multer.memoryStorage()
  const upload = multer({
-    storage: storage
-   },{
     dest: 'avatars',
     limits:{
         fileSize: 1000000
@@ -108,13 +105,16 @@ router.post('/users/logout', auth, async (req, res) => {
         }
         cb(undefined, true)
     }
-  } 
-  )
+  })
  
-
  router.post('/users/me/avatar', auth, upload.single('avatar'), async (req,res) => {
-    const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
-    req.user.avatar = buffer
+    //const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+    //req.user.avatar = buffer
+    //req.user.avatar = req.file.buffer
+    //console.log(req.file.buffer)
+    //req.user.avatar = req.file.buffer
+    //console.log(req.user.avatar)
+    //console.log(buffer)
     await req.user.save() 
     res.send()
  },(error, req, res, next) => {
